@@ -1,0 +1,131 @@
+---
+title: 'CMTH 642 Data Analytics: Advanced Methods'
+output:
+  pdf_document: default
+  html_document: default
+  word_document: default
+---
+<center> <h1> Assignment 2 (10%) </h1> </center>
+<center>  <h3> Ajay Herod </h2> </center>
+<center> <h3> D10 500764104 </h2> </center>
+---
+
+#### 1. Read the csv file (USDA_Clean.csv) in the folder and assign it to a data frame. (3 points)
+```{r}
+USDA_Clean <- read.csv(file = 'USDA_Clean.csv')
+```
+
+#### 2. Check the datatypes of the attributes. (3 points)
+```{r}
+head(USDA_Clean)
+```
+
+#### 3. Visualize the correlation among Calories, Protein, Total Fat, Carbohydrate, Sodium and Cholesterol. (7 points)
+```{r}
+plot(USDA_Clean[4:9])
+```
+
+#### 4. Is the correlation between Calories and Total Fat statistically significant? Why? (7 points)
+```{r}
+#Yes, there is a correlation between Calories and Total Fat. The correlation appears to be statistically significant and shows a strong positive linear trend. This means that as either attribute increases so does the other.  
+```
+
+#### 5. Create a Linear Regression Model, using Calories as the dependent variable Protein, Total Fat, Carbohydrate, Sodium and Cholesterol as the independent variables. (7 points)
+```{r}
+summary(lm (Calories ~ Protein + TotalFat + Carbohydrate + Sodium + Cholesterol, data = USDA_Clean))
+```
+
+#### 6. Write the Linear Regression Equation, using Calories as the dependent variable whereas Protein, TotalFat, Carbohydrate, Sodium and Cholesterol as the independent variables. (7 points)
+```{r}
+formula <- lm(Calories ~ Protein + TotalFat + Carbohydrate + Sodium + Cholesterol, data = USDA_Clean)
+formula
+# Calories = 3.99Protein + 8.77TotalFat + 3.74Carbohydrate + 0.0003Sodium + 0.011Cholestrol + 3.99 
+```
+
+#### 7. Which independent variable is the least significant? Why? (7 points)
+```{r}
+#Sodium is the least significant independent variable because the coefficient in the linear regression equation is the lowest. This means it is the least significant variable for Calories. 
+```
+
+#### 8. A new product is just produced with the following data:                                                            Protein=0.1, TotalFat=35, Carbohydrate=405, Sodium=440, Cholesterol=70, Sugar=NA, Calcium=35, Iron=NA, Potassium=35, VitaminC=10,	VitaminE=NA, VitaminD=NA.                                                                                                         Based on the model you created, what is the predicted value for Calories? (7 points)
+```{r}
+newProduct <- data.frame("Protein" = 0.1, "TotalFat" = 35, "Carbohydrate" = 405, "Sodium" = 440, "Cholesterol" = 70)
+predict(formula, newProduct)
+
+```
+
+#### 9. If the Sodium amount increases from 440 to 44440 (10000% increase), how much change will occur on Calories in percent? Explain why? (7 points)
+```{r}
+newProduct2 <- data.frame("Protein" = 0.1, "TotalFat" = 35, "Carbohydrate" = 405, "Sodium" = 44440, "Cholesterol" = 70)
+((predict(formula, newProduct2)/predict(formula, newProduct))-1)*100
+#There is only a 0.81% increase in calories for a 10000% increase in sodium. This is because sodium has a very low coefficient making it insignificant as a dependent variable to calories even with a 10000% increase. 
+```
+
+
+#### 10. A study of primary education asked elementaty school students to retell two book articles that they read earlier in the week. The first (Article 1) had no pictures, and the second (Article 2) was illustrated with pictures. An expert listened to recordings of the students retelling each article and assigned a score for certain uses of language. Higher scores are better. Here are the data for five readers in this study:
+
+#### Article 1   0.40   0.72   0.00   0.36   0.55
+
+#### Article 2   0.77   0.49   0.66   0.28   0.38
+
+#### A) What are $H_0$ and $H_a$ ? (5 points)
+```{r}
+#Illustrations do not improve how students retell an article
+#H0: p >= 0.05
+#illustrations improve how students retell an article 
+#Ha: p < 0.05
+```
+
+#### B) Is this a paired or unpaired experiment? (5 points)
+```{r}
+#This is a unpaired experiment. 
+```
+
+#### C) Based on your previous answer, which nonparametric test statistic would you use to compare the medians of Article 1 and Article 2. (5 points) 
+```{r}
+#Wilcoxon rank sum test 
+```
+
+#### D) Use a nonparametric test statistic to check if there is a statistically significant difference between the medians of Article 1 and Article 2. (5 points) 
+```{r}
+Article1 <- c(0.40, 0.72, 0.00, 0.36, 0.55)
+Article2 <- c(0.77, 0.49, 0.66, 0.28, 0.38)
+wilcox.test(Article1, Article2)
+
+```
+
+#### E) Will you accept or reject your Null Hypothesis? ($\alpha = 0.05$) Do illustrations improve how the students retell an article or not? Why? (5 points)
+```{r}
+#The p-value is 0.69 indicating to accept the null hypothesis. A p-value higher than 0.05 is not statistically significant and indicates strong evidence for the null hypothesis. This means that the illustrations do not improve how the students retell an article. 
+```
+
+#### 11. Two companies selling toothpastes with the lable of 100 grams per tube on the package. We randomly bought eight toothpastes from each company A and B from random stores. Afterwards, we scaled them using high precision scale. Our measurements are recorded as follows:
+
+#### Company A: 97.1   101.3   107.8   101.9   97.4    104.5   99.5    95.1
+#### Company B: 103.5  105.3   106.5   107.9   102.1   105.6   109.8   97.2
+
+#### A) Is this a paired or unpaired experiment? (5 points)
+```{r}
+#This is a unpaired experiment.
+```
+
+#### B) Based on your previous answer, which nonparametric test statistic would you use to compare the medians of Company A and Company B. (5 points) 
+```{r}
+#Wilcoxon rank sum test 
+```
+
+#### C) Use a nonparametric test statistic to check if there is a statistically significant difference between the medians of Company A and Company B. (5 points) 
+```{r}
+CompanyA <- c(97.1, 101.3, 107.8, 101.9, 97.4, 104.5, 99.5, 95.1)
+CompanyB <- c(103.5, 105.3, 106.5, 107.9, 102.1, 105.6, 109.8, 97.2)
+wilcox.test(CompanyA, CompanyB)
+```
+
+#### D) Will you accept or reject your Null Hypothesis? ($\alpha = 0.05$) Are packaging process similar or different based on weight measurements? Why? (5 points)
+```{r}
+#The p-value is 0.049 indicating to reject the null hypothesis. A p-value less than 0.05 is statistically significant and indicates strong evidence against the null hypothesis. This means the packaging process is different based on weight measurements. 
+```
+
+This is the end of Assignment 2
+
+Ceni Babaoglu, PhD
